@@ -23,13 +23,13 @@ After the repository, authentication, and deployment decisions are reviewed, dep
 
 ## Deploy to Cloudflare button
 
-Cloudflare Deploy buttons require a verified public GitHub or GitLab repository. The repository owner/name is not confirmed in this checkout, so the button below is an intentionally inactive template; do not replace the placeholder with a guessed URL.
+The verified public repository is `ykundesu/YokingTools`. The button deploys a copy to the visitor's own Cloudflare account; it does not configure this project's owner-only management authentication.
 
 ```markdown
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=<VERIFIED_PUBLIC_REPO_URL>)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/ykundesu/YokingTools)
 ```
 
-When a public repository URL is verified, replace `<VERIFIED_PUBLIC_REPO_URL>` with that URL and publish the button in the repository README. See the [Cloudflare Deploy buttons documentation](https://developers.cloudflare.com/workers/platform/deploy-buttons/) for the supported format and behavior.
+See the [Cloudflare Deploy buttons documentation](https://developers.cloudflare.com/workers/platform/deploy-buttons/) for the supported format and behavior.
 
 ## License
 
