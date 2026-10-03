@@ -7,7 +7,7 @@ YokingTools separates browser-local utilities from owner-only management:
 - Browser-local tools (JSON, Markdown, hashing, codecs, CSV, and time conversion) require no account and do not send input to a server.
 - The public build is browser-only: server-side lookup routes (`/api/recon`, `/api/rdap`, `/api/dns`, and `/api/geoip`) are disabled by default and are reserved for separate review.
 - `/api/admin/*` is the owner-only management API boundary. This checkout intentionally fails closed with `503 management_auth_unconfigured` until production authentication is configured.
-- `tools.yoking.dev` is only a future domain candidate. It is not deployed and no DNS record was changed for this project.
+- `tools.yoking.dev` is the verified public browser-only deployment. Its owner-only management routes remain disabled until authentication is configured.
 
 ## Install and verify
 
@@ -19,7 +19,7 @@ npm run build
 npx wrangler deploy --dry-run
 ```
 
-After the repository, authentication, and deployment decisions are reviewed, deploy from an authenticated Cloudflare environment with `npx wrangler deploy`. No deployment is performed by this source checkout.
+The public deployment is built from the `main` branch through Cloudflare Workers Builds. Local source changes are not deployed by `npm run build`.
 
 ## Deploy to Cloudflare button
 
