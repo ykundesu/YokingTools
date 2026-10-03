@@ -33,4 +33,11 @@ describe("static publish safety and mock workflow", () => {
     expect(registry.stop(first.id, "stop-once").status).toBe("stopped");
     expect(registry.list()).toHaveLength(1);
   });
+
+  it("blocks publication when a secret-like file is detected", () => {
+    const registry = new MockPublicationRegistry();
+    const preview = createPreview({ kind: "zip", label: "site.zip" }, [{ path: ".env", size: 4, sha256: "local" }]);
+    preview.findings.push({ severity: "warning", code: "secret_candidate", message: "secret-like file", path: ".env" });
+    expect(() => registry.publish(preview, preview.confirmationText)).toThrow(/secret-like files/);
+  });
 });

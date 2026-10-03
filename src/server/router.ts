@@ -46,6 +46,12 @@ export async function handleApiRequest(request: Request): Promise<Response> {
   const url = new URL(request.url);
   if (request.method !== "GET") return failure("method_not_allowed", "読み取り専用 API は GET のみ対応しています。", 405);
   const origin = request.headers.get("origin");
+  // Management routes remain unavailable until a real server-side
+  // authentication binding is configured. Keep this fail-closed if a future
+  // client starts sending requests to /api/admin/*.
+  if (url.pathname === "/api/admin" || url.pathname.startsWith("/api/admin/")) {
+    return failure("management_auth_unconfigured", "Management APIs are disabled until server-side authentication is configured.", 503);
+  }
   if (origin && origin !== url.origin) return failure("origin_not_allowed", "この API は同一オリジンからのみ利用できます。", 403);
 
   const clientKey = request.headers.get("cf-connecting-ip") ?? request.headers.get("x-forwarded-for") ?? "anonymous";

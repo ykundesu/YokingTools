@@ -12,4 +12,9 @@ describe("safe Markdown renderer", () => {
   it("keeps fenced code escaped", () => {
     expect(renderMarkdown("```html\n<div>safe</div>\n```")).toContain("&lt;div&gt;safe&lt;/div&gt;");
   });
+
+  it("rejects protocol-relative links", () => {
+    const html = renderMarkdown("[external](//evil.example/collect)");
+    expect(html).not.toContain("evil.example");
+  });
 });

@@ -30,6 +30,8 @@ export function inspectZipCentralDirectory(bytes: Uint8Array): ZipInspection {
   const entryCount = readU16(view, eocd + 10);
   const directorySize = readU32(view, eocd + 12);
   const directoryOffset = readU32(view, eocd + 16);
+  if (entryCount > ZIP_LIMITS.maxEntries) return { entries: [], findings: [{ severity: "error", code: "zip_entry_limit", message: `ZIP entry count exceeds ${ZIP_LIMITS.maxEntries}.` }] };
+  if (directoryOffset > bytes.byteLength || directorySize > bytes.byteLength - directoryOffset) return { entries: [], findings: [{ severity: "error", code: "zip_directory_bounds", message: "ZIP central directory is outside the archive bounds." }] };
   if (entryCount === 0xffff || directorySize === 0xffffffff || directoryOffset === 0xffffffff) return { entries: [], findings: [{ severity: "error", code: "zip64_unsupported", message: "ZIP64 は初版では扱いません。" }] };
   const entries: ZipEntryMeta[] = [];
   let offset = directoryOffset;
@@ -42,6 +44,7 @@ export function inspectZipCentralDirectory(bytes: Uint8Array): ZipInspection {
     const flags = readU16(view, offset + 8);
     const compressedSize = readU32(view, offset + 20);
     const uncompressedSize = readU32(view, offset + 24);
+    if (compressedSize === 0xffffffff || uncompressedSize === 0xffffffff) return { entries, findings: [...findings, { severity: "error", code: "zip64_unsupported", message: "ZIP64 entries are not supported." }] };
     const nameLength = readU16(view, offset + 28);
     const extraLength = readU16(view, offset + 30);
     const commentLength = readU16(view, offset + 32);

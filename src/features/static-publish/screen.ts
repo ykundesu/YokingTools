@@ -80,7 +80,8 @@ function renderStaticPublish(container: HTMLElement): () => void {
     if (next.source.kind === "html") {
       const sourceText = html.value.slice(0, 2_000_000);
       const frame = el("iframe", { className: "isolated-preview", sandbox: "", title: "隔離 HTML プレビュー" });
-      frame.srcdoc = sourceText;
+      frame.setAttribute("referrerpolicy", "no-referrer");
+      frame.srcdoc = `<!doctype html><html><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; media-src data:; font-src data:; style-src 'unsafe-inline';"></head><body>${sourceText}</body></html>`;
       output.append(el("h3", {}, ["隔離プレビュー"]), frame);
     }
   };

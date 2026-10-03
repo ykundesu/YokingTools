@@ -162,6 +162,7 @@ export class MockPublicationRegistry {
   }
 
   publish(preview: PublicationPreview, confirmation: string, now = new Date().toISOString()): PublicationRecord {
+    if (preview.findings.some((finding) => finding.code === "secret_candidate")) throw new Error("Publication blocked: secret-like files must be removed.");
     if (confirmation !== preview.confirmationText) throw new Error("公開確認文が一致しません。");
     if (preview.findings.some((finding) => finding.severity === "error")) throw new Error("安全チェックに失敗しています。");
     if (preview.domainCollision) throw new Error("ドメイン衝突を解消してから実行してください。");
@@ -184,6 +185,7 @@ export class MockPublicationRegistry {
   }
 
   update(id: string, preview: PublicationPreview, confirmation: string, now = new Date().toISOString()): PublicationRecord {
+    if (preview.findings.some((finding) => finding.code === "secret_candidate")) throw new Error("Update blocked: secret-like files must be removed.");
     if (confirmation !== preview.confirmationText) throw new Error("更新確認文が一致しません。");
     const record = this.records.get(id);
     if (!record) throw new Error("公開物が見つかりません。");

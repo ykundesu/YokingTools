@@ -10,7 +10,12 @@ const ALLOWED_HOSTS = new Set(Object.values(PROVIDERS).map((origin) => new URL(o
 export function isAllowedProviderUrl(value: string): boolean {
   try {
     const url = new URL(value);
-    return url.protocol === "https:" && ALLOWED_HOSTS.has(url.hostname) && !url.username && !url.password;
+    if (url.protocol !== "https:" || url.port || !ALLOWED_HOSTS.has(url.hostname) || url.username || url.password) return false;
+    if (url.hostname === "crt.sh") return url.pathname === "/";
+    if (url.hostname === "rdap.org") return url.pathname.startsWith("/domain/");
+    if (url.hostname === "cloudflare-dns.com") return url.pathname === "/dns-query";
+    if (url.hostname === "ipwho.is") return url.pathname.split("/").filter(Boolean).length === 1;
+    return false;
   } catch {
     return false;
   }

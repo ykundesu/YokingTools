@@ -7,5 +7,8 @@ describe("fixed provider allowlist", () => {
     expect(isAllowedProviderUrl("https://evil.example/dns-query?name=example.com")).toBe(false);
     expect(isAllowedProviderUrl("http://cloudflare-dns.com/dns-query")).toBe(false);
     expect(isAllowedProviderUrl("https://cloudflare-dns.com@evil.example/dns-query")).toBe(false);
+    expect(isAllowedProviderUrl("https://cloudflare-dns.com:8443/dns-query")).toBe(false);
+    expect(isAllowedProviderUrl("https://cloudflare-dns.com/other")).toBe(false);
+    expect(isAllowedProviderUrl("https://crt.sh.evil.example/?q=example.com")).toBe(false);
   });
 });

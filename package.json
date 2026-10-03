@@ -1,5 +1,5 @@
 {
-  "name": "personal-workers-toolbox",
+  "name": "yoking-tools",
   "private": true,
   "version": "0.1.0",
   "description": "個人用のブラウザ内処理中心 Cloudflare Workers 便利ツール集",
