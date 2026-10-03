@@ -42,7 +42,13 @@ export interface AssetBinding {
   fetch: (request: Request) => Promise<Response>;
 }
 
-export async function handleApiRequest(request: Request): Promise<Response> {
+export interface RouterEnv {
+  PUBLIC_SERVER_LOOKUPS?: string;
+}
+
+const LOOKUP_PATHS = new Set(["/api/recon", "/api/rdap", "/api/dns", "/api/geoip"]);
+
+export async function handleApiRequest(request: Request, env: RouterEnv = {}): Promise<Response> {
   const url = new URL(request.url);
   if (request.method !== "GET") return failure("method_not_allowed", "読み取り専用 API は GET のみ対応しています。", 405);
   const origin = request.headers.get("origin");
@@ -51,6 +57,9 @@ export async function handleApiRequest(request: Request): Promise<Response> {
   // client starts sending requests to /api/admin/*.
   if (url.pathname === "/api/admin" || url.pathname.startsWith("/api/admin/")) {
     return failure("management_auth_unconfigured", "Management APIs are disabled until server-side authentication is configured.", 503);
+  }
+  if (LOOKUP_PATHS.has(url.pathname) && env.PUBLIC_SERVER_LOOKUPS !== "true") {
+    return failure("server_lookup_disabled", "Server-side lookup APIs are disabled in the browser-only public build.", 404);
   }
   if (origin && origin !== url.origin) return failure("origin_not_allowed", "この API は同一オリジンからのみ利用できます。", 403);
 

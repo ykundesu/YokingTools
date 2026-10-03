@@ -5,7 +5,7 @@
 YokingTools separates browser-local utilities from owner-only management:
 
 - Browser-local tools (JSON, Markdown, hashing, codecs, CSV, and time conversion) require no account and do not send input to a server.
-- Network lookup routes are read-only and limited to fixed public providers. They do not expose deployment, DNS, Access, or repository mutation.
+- The public build is browser-only: server-side lookup routes (`/api/recon`, `/api/rdap`, `/api/dns`, and `/api/geoip`) are disabled by default and are reserved for separate review.
 - `/api/admin/*` is the owner-only management API boundary. This checkout intentionally fails closed with `503 management_auth_unconfigured` until production authentication is configured.
 - `tools.yoking.dev` is only a future domain candidate. It is not deployed and no DNS record was changed for this project.
 
@@ -30,6 +30,10 @@ Cloudflare Deploy buttons require a verified public GitHub or GitLab repository.
 ```
 
 When a public repository URL is verified, replace `<VERIFIED_PUBLIC_REPO_URL>` with that URL and publish the button in the repository README. See the [Cloudflare Deploy buttons documentation](https://developers.cloudflare.com/workers/platform/deploy-buttons/) for the supported format and behavior.
+
+## License
+
+YokingTools is released under the [MIT License](LICENSE).
 
 ブラウザ内処理を優先した、日本語・モバイル対応の個人用 Cloudflare Workers 便利ツール集です。
 
