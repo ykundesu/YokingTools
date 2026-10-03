@@ -1,5 +1,36 @@
 # YokingTools
 
+## Public and private boundary
+
+YokingTools separates browser-local utilities from owner-only management:
+
+- Browser-local tools (JSON, Markdown, hashing, codecs, CSV, and time conversion) require no account and do not send input to a server.
+- Network lookup routes are read-only and limited to fixed public providers. They do not expose deployment, DNS, Access, or repository mutation.
+- `/api/admin/*` is the owner-only management API boundary. This checkout intentionally fails closed with `503 management_auth_unconfigured` until production authentication is configured.
+- `tools.yoking.dev` is only a future domain candidate. It is not deployed and no DNS record was changed for this project.
+
+## Install and verify
+
+```text
+npm install
+npm run dev
+npm run check
+npm run build
+npx wrangler deploy --dry-run
+```
+
+After the repository, authentication, and deployment decisions are reviewed, deploy from an authenticated Cloudflare environment with `npx wrangler deploy`. No deployment is performed by this source checkout.
+
+## Deploy to Cloudflare button
+
+Cloudflare Deploy buttons require a verified public GitHub or GitLab repository. The repository owner/name is not confirmed in this checkout, so the button below is an intentionally inactive template; do not replace the placeholder with a guessed URL.
+
+```markdown
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=<VERIFIED_PUBLIC_REPO_URL>)
+```
+
+When a public repository URL is verified, replace `<VERIFIED_PUBLIC_REPO_URL>` with that URL and publish the button in the repository README. See the [Cloudflare Deploy buttons documentation](https://developers.cloudflare.com/workers/platform/deploy-buttons/) for the supported format and behavior.
+
 ブラウザ内処理を優先した、日本語・モバイル対応の個人用 Cloudflare Workers 便利ツール集です。
 
 ## 初期機能
