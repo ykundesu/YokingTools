@@ -1,0 +1,30 @@
+{
+  "name": "personal-workers-toolbox",
+  "private": true,
+  "version": "0.1.0",
+  "description": "個人用のブラウザ内処理中心 Cloudflare Workers 便利ツール集",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "npm run lint && npm run typecheck && npm run test && npm run build"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "latest",
+    "@eslint/js": "latest",
+    "@types/node": "latest",
+    "eslint": "latest",
+    "typescript": "latest",
+    "typescript-eslint": "latest",
+    "vite": "latest",
+    "vitest": "latest",
+    "wrangler": "^4.34.0"
+  },
+  "dependencies": {
+    "fflate": "latest"
+  }
+}
