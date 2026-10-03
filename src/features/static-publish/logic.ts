@@ -187,6 +187,7 @@ export class MockPublicationRegistry {
     if (confirmation !== preview.confirmationText) throw new Error("更新確認文が一致しません。");
     const record = this.records.get(id);
     if (!record) throw new Error("公開物が見つかりません。");
+    if (preview.findings.some((finding) => finding.severity === "error")) throw new Error("安全チェックに失敗しています。");
     if (preview.domainCollision && preview.domainCollision !== record.domain) throw new Error("ドメイン衝突を解消してから実行してください。");
     const known = record.history.find((entry) => entry.idempotencyKey === preview.idempotencyKey);
     if (known) return record;

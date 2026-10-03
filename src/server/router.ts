@@ -69,7 +69,7 @@ export async function handleApiRequest(request: Request): Promise<Response> {
     if (reason === "provider_response_too_large") return failure("provider_response_too_large", "外部応答が大きすぎるため中止しました。", 502);
     if (reason === "provider_redirect_blocked") return failure("provider_redirect_blocked", "許可していないリダイレクトを検出したため中止しました。", 502);
     if (reason === "provider_not_allowed") return failure("provider_not_allowed", "許可されていない外部先です。", 502);
-    if (reason === "AbortError") return failure("provider_timeout", "外部照会が時間内に完了しませんでした。", 504);
+    if (reason === "AbortError" || /abort/i.test(reason)) return failure("provider_timeout", "外部照会が時間内に完了しませんでした。", 504);
     return failure("provider_unavailable", "外部照会に失敗しました。プロバイダの状態を確認してください。", 502);
   }
 }

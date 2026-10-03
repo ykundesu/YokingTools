@@ -4,9 +4,15 @@ export interface CsvParseOptions {
 }
 
 export function detectDelimiter(input: string): string {
-  const firstLine = input.split(/\r?\n/, 1)[0] ?? "";
   const candidates = [",", "\t", ";"];
-  return candidates.sort((left, right) => firstLine.split(right).length - firstLine.split(left).length)[0] ?? ",";
+  const counts = new Map(candidates.map((candidate) => [candidate, 0]));
+  let inQuotes = false;
+  for (const character of input) {
+    if (character === '"') inQuotes = !inQuotes;
+    if (!inQuotes && counts.has(character)) counts.set(character, (counts.get(character) ?? 0) + 1);
+    if (!inQuotes && (character === "\n" || character === "\r")) break;
+  }
+  return candidates.sort((left, right) => (counts.get(right) ?? 0) - (counts.get(left) ?? 0))[0] ?? ",";
 }
 
 export function parseCsv(input: string, options: CsvParseOptions = {}): string[][] {
@@ -20,11 +26,13 @@ export function parseCsv(input: string, options: CsvParseOptions = {}): string[]
   let field = "";
   let inQuotes = false;
   let fieldStarted = false;
+  let cellCount = 0;
   const pushField = (): void => {
     row.push(field);
     field = "";
     fieldStarted = false;
-    if (rows.length * 1 + row.length > maxCells) throw new Error("CSV のセル数が上限を超えました。");
+    cellCount += 1;
+    if (cellCount > maxCells) throw new Error("CSV のセル数が上限を超えました。");
   };
   const pushRow = (): void => {
     pushField();

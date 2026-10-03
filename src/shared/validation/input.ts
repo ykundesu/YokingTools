@@ -3,7 +3,7 @@ const MAX_DOMAIN_LENGTH = 253;
 
 export function normalizeDomain(value: string): string | null {
   const input = value.trim().toLowerCase().replace(/\.$/, "");
-  if (!input || input.length > MAX_DOMAIN_LENGTH || /[@/?#\\]/.test(input)) return null;
+  if (!input || input.length > MAX_DOMAIN_LENGTH || /[@/?#\\]/.test(input) || !/^[a-z0-9.-]+$/i.test(input) || isIpv4(input) || isIpv6(input)) return null;
 
   let hostname: string;
   try {
@@ -46,11 +46,15 @@ export function isPrivateIp(value: string): boolean {
     return a === 0 || a === 10 || a === 127 || a === 169 && b === 254 || a === 172 && b >= 16 && b <= 31 || a === 192 && b === 168 || a === 100 && b >= 64 && b <= 127 || a >= 224;
   }
   if (!isIpv6(input)) return false;
+  if (input.startsWith("::ffff:")) {
+    const mapped = input.slice("::ffff:".length);
+    if (isIpv4(mapped)) return isPrivateIp(mapped);
+  }
   return input === "::" || input === "::1" || input.startsWith("fc") || input.startsWith("fd") || input.startsWith("fe8") || input.startsWith("fe9") || input.startsWith("fea") || input.startsWith("feb") || input.startsWith("ff");
 }
 
 export function normalizePublicIp(value: string): string | null {
-  const input = value.trim();
+  const input = value.trim().replace(/^\[/, "").replace(/\]$/, "");
   if ((!isIpv4(input) && !isIpv6(input)) || isPrivateIp(input)) return null;
   return input;
 }
